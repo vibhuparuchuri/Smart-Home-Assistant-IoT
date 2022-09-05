@@ -1,0 +1,437 @@
+[
+    {
+        "id": "9d1caaaee89c86d9",
+        "type": "tab",
+        "label": "Project-AzureFlow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "9d133d38043a3ead",
+        "type": "azureiotdevice",
+        "z": "9d1caaaee89c86d9",
+        "deviceid": "2j02f0uww4k",
+        "pnpModelid": "",
+        "connectiontype": "dps",
+        "authenticationmethod": "sas",
+        "iothub": "",
+        "isIotcentral": true,
+        "scopeid": "0ne004C65B0",
+        "enrollmenttype": "device",
+        "saskey": "V8ZZL+Ik85WM/tqtL/Q0u6KLfyzHmf5AGlZXm99qnpE=",
+        "certname": "",
+        "keyname": "",
+        "passphrase": "",
+        "protocol": "mqtt",
+        "retryInterval": 10,
+        "methods": [],
+        "DPSpayload": "",
+        "gatewayHostname": "",
+        "caname": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "x": 1140,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "52d46eac32b6d6e5",
+        "type": "inject",
+        "z": "9d1caaaee89c86d9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 320,
+        "wires": [
+            [
+                "4980a30efbfdbbc2"
+            ]
+        ]
+    },
+    {
+        "id": "4980a30efbfdbbc2",
+        "type": "function",
+        "z": "9d1caaaee89c86d9",
+        "name": "set interaction type",
+        "func": "var value = global.get(\"temperatureValue\")\n\nmsg = {\n    'topic':'telemetry',\n    'payload':{'temperature':value}\n};\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 320,
+        "wires": [
+            [
+                "9d133d38043a3ead"
+            ]
+        ]
+    },
+    {
+        "id": "6b56cced790a7444",
+        "type": "function",
+        "z": "9d1caaaee89c86d9",
+        "name": "set interaction type",
+        "func": "var value = global.get(\"humdifierValue\")\n\n\nmsg = {\n    'topic':'telemetry',\n    'payload':{'humidity':value}\n};\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 440,
+        "wires": [
+            [
+                "9d133d38043a3ead"
+            ]
+        ]
+    },
+    {
+        "id": "9888663980b8d964",
+        "type": "function",
+        "z": "9d1caaaee89c86d9",
+        "name": "set interaction type",
+        "func": "var value = global.get(\"airQualityValue\")\n\n\nmsg = {\n    'topic':'telemetry',\n    'payload':{'aql':value}\n};\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 540,
+        "wires": [
+            [
+                "9d133d38043a3ead"
+            ]
+        ]
+    },
+    {
+        "id": "5d5cd5b39f8e8bf4",
+        "type": "inject",
+        "z": "9d1caaaee89c86d9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "8",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 680,
+        "wires": [
+            [
+                "4d951518cd2f8790"
+            ]
+        ]
+    },
+    {
+        "id": "93bd8421f112fbd3",
+        "type": "inject",
+        "z": "9d1caaaee89c86d9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "9",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 760,
+        "wires": [
+            [
+                "b2e3ca980aec9ae4"
+            ]
+        ]
+    },
+    {
+        "id": "d8937bfb31959e13",
+        "type": "inject",
+        "z": "9d1caaaee89c86d9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "6",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 440,
+        "wires": [
+            [
+                "6b56cced790a7444"
+            ]
+        ]
+    },
+    {
+        "id": "8b6bba235865bafe",
+        "type": "inject",
+        "z": "9d1caaaee89c86d9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "7",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 540,
+        "wires": [
+            [
+                "9888663980b8d964"
+            ]
+        ]
+    },
+    {
+        "id": "4d951518cd2f8790",
+        "type": "function",
+        "z": "9d1caaaee89c86d9",
+        "name": "set interaction type",
+        "func": "var value = global.get(\"lightIntensityValue\")\n\n\nmsg = {\n    'topic':'telemetry',\n    'payload':{'lightIntensity':value}\n};\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 680,
+        "wires": [
+            [
+                "9d133d38043a3ead"
+            ]
+        ]
+    },
+    {
+        "id": "b2e3ca980aec9ae4",
+        "type": "function",
+        "z": "9d1caaaee89c86d9",
+        "name": "set interaction type",
+        "func": "var value = global.get(\"optimalLightIntensityValue\")\n\n\nmsg = {\n    'topic':'telemetry',\n    'payload':{'optimalLightIntensity':value}\n};\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 760,
+        "wires": [
+            [
+                "9d133d38043a3ead"
+            ]
+        ]
+    },
+    {
+        "id": "489b2a6443516778",
+        "type": "comment",
+        "z": "9d1caaaee89c86d9",
+        "name": "Temperature",
+        "info": "",
+        "x": 90,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e32d506bab2a5f39",
+        "type": "comment",
+        "z": "9d1caaaee89c86d9",
+        "name": "Humidity",
+        "info": "",
+        "x": 80,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "b8a6f94a4691328e",
+        "type": "comment",
+        "z": "9d1caaaee89c86d9",
+        "name": "Air Quality",
+        "info": "",
+        "x": 80,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "18b5d375ea779a68",
+        "type": "comment",
+        "z": "9d1caaaee89c86d9",
+        "name": "Light Intensity",
+        "info": "",
+        "x": 90,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "68ccfe1ca14c1024",
+        "type": "comment",
+        "z": "9d1caaaee89c86d9",
+        "name": "Motion Detected",
+        "info": "",
+        "x": 100,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "043cfa4d14a2a104",
+        "type": "inject",
+        "z": "9d1caaaee89c86d9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 920,
+        "wires": [
+            [
+                "bf32879111962985"
+            ]
+        ]
+    },
+    {
+        "id": "bf32879111962985",
+        "type": "function",
+        "z": "9d1caaaee89c86d9",
+        "name": "set interaction type",
+        "func": "var value = global.get(\"motionDetected\")\n\n\nmsg = {\n    'topic':'telemetry',\n    'payload':{'motionDetected':value}\n};\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 920,
+        "wires": [
+            [
+                "9d133d38043a3ead"
+            ]
+        ]
+    },
+    {
+        "id": "7bd69851c4c0b2ac",
+        "type": "comment",
+        "z": "9d1caaaee89c86d9",
+        "name": "User Identification",
+        "info": "",
+        "x": 110,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "506f5bfc11fb73bb",
+        "type": "inject",
+        "z": "9d1caaaee89c86d9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 1060,
+        "wires": [
+            [
+                "e4134dbe976f7458"
+            ]
+        ]
+    },
+    {
+        "id": "e4134dbe976f7458",
+        "type": "function",
+        "z": "9d1caaaee89c86d9",
+        "name": "set interaction type",
+        "func": "var value = global.get(\"userIdentified\")\n\n\nmsg = {\n    'topic':'telemetry',\n    'payload':{'userIdentified':value}\n};\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 1060,
+        "wires": [
+            [
+                "9d133d38043a3ead"
+            ]
+        ]
+    }
+]

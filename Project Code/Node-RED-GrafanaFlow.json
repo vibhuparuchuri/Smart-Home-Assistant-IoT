@@ -1,0 +1,232 @@
+[
+    {
+        "id": "3426ee670e97b268",
+        "type": "tab",
+        "label": "Project-Grafana-DataAnalysis",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5849060c9b071fd1",
+        "type": "inject",
+        "z": "3426ee670e97b268",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 180,
+        "wires": [
+            [
+                "ffc96eab1e49f3fa"
+            ]
+        ]
+    },
+    {
+        "id": "ffc96eab1e49f3fa",
+        "type": "function",
+        "z": "3426ee670e97b268",
+        "name": "storeTemp",
+        "func": "msg.payload = global.get(\"temperatureValue\")\n\nif ((typeof msg.payload != \"undefined\") &&\n    (String(msg.payload).match(\"e\") != \"e\"))\n{\nmsg.payload = {\ntemp:msg.payload\n};\nreturn msg\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 180,
+        "wires": [
+            [
+                "3f062b87c4a0ea16"
+            ]
+        ]
+    },
+    {
+        "id": "92c64729f302af36",
+        "type": "inject",
+        "z": "3426ee670e97b268",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 280,
+        "wires": [
+            [
+                "9b4b0f5a20172d02"
+            ]
+        ]
+    },
+    {
+        "id": "9f5a266b07077f30",
+        "type": "inject",
+        "z": "3426ee670e97b268",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 380,
+        "wires": [
+            [
+                "f3f94c28baa6c3dc"
+            ]
+        ]
+    },
+    {
+        "id": "9b4b0f5a20172d02",
+        "type": "function",
+        "z": "3426ee670e97b268",
+        "name": "storeHumidity",
+        "func": "msg.payload = global.get(\"humdifierValue\")\n\nif ((typeof msg.payload != \"undefined\") &&\n    (String(msg.payload).match(\"e\") != \"e\"))\n{\nmsg.payload = {\nhum:msg.payload\n};\nreturn msg\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 280,
+        "wires": [
+            [
+                "4da993c7f0a630e9"
+            ]
+        ]
+    },
+    {
+        "id": "f3f94c28baa6c3dc",
+        "type": "function",
+        "z": "3426ee670e97b268",
+        "name": "storeAirQuality",
+        "func": "msg.payload = global.get(\"airQualityValue\")\n\nif ((typeof msg.payload != \"undefined\") &&\n    (String(msg.payload).match(\"e\") != \"e\"))\n{\nmsg.payload = {\naql:msg.payload\n};\nreturn msg\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 380,
+        "wires": [
+            [
+                "3439dace43f18660"
+            ]
+        ]
+    },
+    {
+        "id": "3f062b87c4a0ea16",
+        "type": "influxdb out",
+        "z": "3426ee670e97b268",
+        "influxdb": "501eeea913a5f6a0",
+        "name": "TempInfoDB",
+        "measurement": "Temperature",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 690,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "4da993c7f0a630e9",
+        "type": "influxdb out",
+        "z": "3426ee670e97b268",
+        "influxdb": "501eeea913a5f6a0",
+        "name": "HumInfoDB",
+        "measurement": "Humidity",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 710,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "3439dace43f18660",
+        "type": "influxdb out",
+        "z": "3426ee670e97b268",
+        "influxdb": "501eeea913a5f6a0",
+        "name": "AirQualityInfoDB",
+        "measurement": "AirQuality",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 715,
+        "y": 378,
+        "wires": []
+    },
+    {
+        "id": "8d5de0e1f0abece9",
+        "type": "comment",
+        "z": "3426ee670e97b268",
+        "name": "Grafana ",
+        "info": "",
+        "x": 120,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "501eeea913a5f6a0",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "project",
+        "name": "InfluxDB",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "rejectUnauthorized": true
+    }
+]

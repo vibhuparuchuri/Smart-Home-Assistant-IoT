@@ -1,0 +1,2498 @@
+[
+    {
+        "id": "78de064504b44f81",
+        "type": "tab",
+        "label": "Project-MainFlow-Node-RED",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b725793f0a731027",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 540,
+        "wires": [
+            [
+                "a4b53453a0d46edf",
+                "274cb0956844da77"
+            ]
+        ]
+    },
+    {
+        "id": "7c1abe37ddd5b977",
+        "type": "http request",
+        "z": "78de064504b44f81",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://assignment1-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/fb2797fa-9c4a-4545-a20b-5ddfc2abaebe/classify/iterations/Iteration2/image",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 1370,
+        "y": 680,
+        "wires": [
+            [
+                "8570d273ce9e0387"
+            ]
+        ]
+    },
+    {
+        "id": "5d86249e7a4d766d",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseImageData",
+        "func": "msg.data = msg.payload;\nmsg.headers = {};\nmsg.headers['Prediction-Key'] = 'bc6a57279acb40b6ae6635f23b2999bf';\nmsg.headers['Content-Type'] =  'application/octet-stream';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1230,
+        "y": 620,
+        "wires": [
+            [
+                "7c1abe37ddd5b977"
+            ]
+        ]
+    },
+    {
+        "id": "222a6fb18a0c67c4",
+        "type": "file in",
+        "z": "78de064504b44f81",
+        "name": "",
+        "filename": "/home/pi/Desktop/image5.jpg",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1060,
+        "y": 540,
+        "wires": [
+            [
+                "5d86249e7a4d766d"
+            ]
+        ]
+    },
+    {
+        "id": "8570d273ce9e0387",
+        "type": "json",
+        "z": "78de064504b44f81",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1490,
+        "y": 740,
+        "wires": [
+            [
+                "457bb94222d3c5e8"
+            ]
+        ]
+    },
+    {
+        "id": "72f7bf5402e91754",
+        "type": "grove digital sensor",
+        "z": "78de064504b44f81",
+        "name": "Ultrasonic Sensor",
+        "board": "87b737a3b21ecf5c",
+        "sensor": "ultrasonic",
+        "repeat": "2",
+        "pin": "6",
+        "x": 130,
+        "y": 440,
+        "wires": [
+            [
+                "cf0b4485ef5f1c67"
+            ]
+        ]
+    },
+    {
+        "id": "cf0b4485ef5f1c67",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "setDistanceglobal",
+        "func": "global.set(\"distance\",msg.payload)\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "17c159459ac15c01",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "b07b0bc4efa7d487"
+            ]
+        ]
+    },
+    {
+        "id": "b07b0bc4efa7d487",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "initializeUserIdentification",
+        "func": "global.set(\"userIdentified\",false)\nglobal.set(\"userIdnProcess\",false)\nglobal.set(\"recording\",false)\nglobal.set(\"motionDetected\",\"No\")\nmsg.payload = global.get(\"userIdentified\")\nmsg.topic = global.get(\"userIdnProcess\")\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 360,
+        "wires": [
+            [
+                "1b40a866b5e99c4e"
+            ]
+        ]
+    },
+    {
+        "id": "fd3fc4738e5e9469",
+        "type": "exec",
+        "z": "78de064504b44f81",
+        "command": "sudo python /home/pi/Desktop/tcss573/project/cam.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 680,
+        "y": 540,
+        "wires": [
+            [
+                "222a6fb18a0c67c4"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a4b53453a0d46edf",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "startUserIdenitifcation",
+        "func": "var camProcess = global.get(\"userIdnProcess\")\n\nif (camProcess == false){\n    var usrIdn = global.get(\"userIdentified\")\n    var dst = global.get(\"distance\")\n    if (usrIdn == false && dst < 20){\n        global.set(\"userIdnProcess\",true)\n        return msg\n    }\n\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 540,
+        "wires": [
+            [
+                "fd3fc4738e5e9469"
+            ]
+        ]
+    },
+    {
+        "id": "457bb94222d3c5e8",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "processAzureResponse",
+        "func": "var prediction = msg.payload.predictions[0]\nglobal.set(\"userIdnProcess\",false)\nif (prediction.tagName == \"user\"){\n    global.set(\"userIdentified\",true)\n    msg.text = \"Welcome home!\"\n    return msg\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1630,
+        "y": 800,
+        "wires": [
+            [
+                "36aa1c2298d8e9d1",
+                "31f59b1df848cf33",
+                "b34948d1b4e0d738",
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "36aa1c2298d8e9d1",
+        "type": "delay",
+        "z": "78de064504b44f81",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "30",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1650,
+        "y": 880,
+        "wires": [
+            [
+                "b571d740a7378b9c"
+            ]
+        ]
+    },
+    {
+        "id": "b571d740a7378b9c",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "resetUsrIdnTimer",
+        "func": "global.set(\"userIdentified\",false)",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1710,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "659aeba6370353d8",
+        "type": "comment",
+        "z": "78de064504b44f81",
+        "name": "Lights Module",
+        "info": "",
+        "x": 110,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "31f59b1df848cf33",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "computeAdjustmentDirection",
+        "func": "var optimumLightIntensity = parseInt(global.get(\"optimalLightIntensityValue\"))\nvar lightIntensity = parseInt(global.get(\"lightIntensityValue\"))\n\nif (lightIntensity < optimumLightIntensity){\n    global.set(\"direction\",\"up\")\n}\nelse if (lightIntensity > optimumLightIntensity){\n    global.set(\"direction\",\"down\")\n}\nelse{\n    global.set(\"direction\",\"equal\")\n}\nvar direction = global.get(\"direction\")\nmsg.payload = direction\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1300,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "af4a84da439bb030",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "Inject Optimal Brightness",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "400",
+        "payloadType": "num",
+        "x": 150,
+        "y": 1100,
+        "wires": [
+            [
+                "6d694b00393093b3",
+                "3fa6e5c85613821b"
+            ]
+        ]
+    },
+    {
+        "id": "6d694b00393093b3",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "setOptimumLightIntensity",
+        "func": "global.set(\"optimalLightIntensityValue\",msg.payload)\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 1100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3fa6e5c85613821b",
+        "type": "ui_slider",
+        "z": "78de064504b44f81",
+        "name": "",
+        "label": "Optimal Light Intensity",
+        "tooltip": "",
+        "group": "bcd28d852f40a163",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "800",
+        "step": "100",
+        "className": "",
+        "x": 500,
+        "y": 1160,
+        "wires": [
+            [
+                "6d694b00393093b3",
+                "d068132ce9898acb",
+                "31f59b1df848cf33"
+            ]
+        ]
+    },
+    {
+        "id": "d068132ce9898acb",
+        "type": "debug",
+        "z": "78de064504b44f81",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "bc12f58772c06c87",
+        "type": "grove analog sensor",
+        "z": "78de064504b44f81",
+        "name": "Light Intensity",
+        "pin": "0",
+        "sensor": "light",
+        "repeat": "2",
+        "board": "87b737a3b21ecf5c",
+        "x": 90,
+        "y": 1260,
+        "wires": [
+            [
+                "e28e3669982adaa4",
+                "7bcf062319cfbd65"
+            ]
+        ]
+    },
+    {
+        "id": "e28e3669982adaa4",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "setLightIntensity",
+        "func": "global.set(\"lightIntensityValue\",msg.payload)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7bcf062319cfbd65",
+        "type": "ui_text",
+        "z": "78de064504b44f81",
+        "group": "bcd28d852f40a163",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Light Intensity",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 500,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "287bf628111bbcdc",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "adjustBrightnessTimeStamp",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 1400,
+        "wires": [
+            [
+                "21448a1c98a2dd8a"
+            ]
+        ]
+    },
+    {
+        "id": "21448a1c98a2dd8a",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "automaticBrightnessAdjustment",
+        "func": "var optimumLightIntensity = global.get(\"optimalLightIntensityValue\")\nvar lightIntensity = global.get(\"lightIntensityValue\")\nvar brightness = global.get(\"brightness\")\nvar direction = global.get(\"direction\")\nvar status = global.get(\"lightsStatus\")\nif (direction == \"up\"){\n    if (lightIntensity < optimumLightIntensity && status ==\"On\"){\n        if (brightness < 100){\n            msg.payload = {}\n            if (brightness == 91){\n                msg.payload.brightness = 100\n            }\n            else{\n                msg.payload.brightness = brightness + 10\n            }\n            global.set(\"brightness\",msg.payload.brightness)\n            return msg\n        }\n    }\n}\n\nif (direction==\"down\"){\n    if (lightIntensity > optimumLightIntensity && status == \"On\"){\n        if (brightness > 1){\n            msg.payload = {}\n            if (brightness == 10){\n                msg.payload.brightness = 1\n            }\n            else{\n                msg.payload.brightness = brightness - 10\n            }\n            global.set(\"brightness\",msg.payload.brightness)\n            return msg\n        }\n    }\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 1400,
+        "wires": [
+            [
+                "7fd7224850860ae6"
+            ]
+        ]
+    },
+    {
+        "id": "cb1c4cfb64dd4a33",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "getInfo",
+        "payloadType": "str",
+        "x": 100,
+        "y": 1500,
+        "wires": [
+            [
+                "7fd7224850860ae6"
+            ]
+        ]
+    },
+    {
+        "id": "7fd7224850860ae6",
+        "type": "kasa",
+        "z": "78de064504b44f81",
+        "name": "Lights",
+        "device": "192.168.68.104",
+        "interval": 60000,
+        "eventInterval": 15000,
+        "payload": "getInfo",
+        "payloadType": "info",
+        "debug": false,
+        "x": 470,
+        "y": 1500,
+        "wires": [
+            [
+                "ce6e33ba96677fac",
+                "c740b05e67d5e110",
+                "56fa66c9623a4c6d"
+            ]
+        ]
+    },
+    {
+        "id": "ce6e33ba96677fac",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "setBrightness",
+        "func": "global.set(\"brightness\",msg.payload.brightness)\nglobal.set(\"lightStatus\",msg.payload.relay_state)\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 1500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c740b05e67d5e110",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "setStatus",
+        "func": "if (msg.payload.relay_state == 1){\n    msg.payload = \"On\"\n    global.set(\"lightsStatus\",msg.payload)\n}\nelse{\n    msg.payload = \"Off\"\n    global.set(\"lightsStatus\",msg.payload)\n}\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 1580,
+        "wires": [
+            [
+                "aa6d639e81ff98d5"
+            ]
+        ]
+    },
+    {
+        "id": "aa6d639e81ff98d5",
+        "type": "ui_text",
+        "z": "78de064504b44f81",
+        "group": "bcd28d852f40a163",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Lights Status",
+        "label": "Lights Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 950,
+        "y": 1580,
+        "wires": []
+    },
+    {
+        "id": "56fa66c9623a4c6d",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "setBrigthnessGauge",
+        "func": "msg.payload = msg.payload.brightness\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 1640,
+        "wires": [
+            [
+                "67da75315140ee4f"
+            ]
+        ]
+    },
+    {
+        "id": "ab943d3151d11652",
+        "type": "ui_button",
+        "z": "78de064504b44f81",
+        "name": "Lights Button",
+        "group": "bcd28d852f40a163",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Lights On/Off",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 90,
+        "y": 1740,
+        "wires": [
+            [
+                "f8b980b6aec12383"
+            ]
+        ]
+    },
+    {
+        "id": "f8b980b6aec12383",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "toggleLights",
+        "func": "var status = global.get(\"lightsStatus\")\nif (status == \"On\"){\n    msg.payload = false\n}\nelse{\n    msg.payload = true\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 1740,
+        "wires": [
+            [
+                "7fd7224850860ae6"
+            ]
+        ]
+    },
+    {
+        "id": "aff058f7b21167e7",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "checkUserIdentification",
+        "func": "var usrIdn = global.get(\"userIdentified\")\nif (usrIdn == true){\n    return msg\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f1fec976ac01e8f3",
+        "type": "comment",
+        "z": "78de064504b44f81",
+        "name": "User Monitoring",
+        "info": "",
+        "x": 120,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "0ae3ade3822907c6",
+        "type": "ui_button",
+        "z": "78de064504b44f81",
+        "name": "",
+        "group": "c00f649b13961c7f",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Humidifier On/Off",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 1980,
+        "wires": [
+            [
+                "077c33b733c15d02"
+            ]
+        ]
+    },
+    {
+        "id": "90c7022bf5567ba0",
+        "type": "comment",
+        "z": "78de064504b44f81",
+        "name": "Humidifier Module",
+        "info": "",
+        "x": 110,
+        "y": 1840,
+        "wires": []
+    },
+    {
+        "id": "8a2589b2aadde608",
+        "type": "grove digital sensor",
+        "z": "78de064504b44f81",
+        "name": "DHT11 - Temperature/Humidity",
+        "board": "87b737a3b21ecf5c",
+        "sensor": "dht11",
+        "repeat": "3",
+        "pin": "7",
+        "x": 170,
+        "y": 2240,
+        "wires": [
+            [
+                "8ae8439da14ed8e2",
+                "828f52d14663a712"
+            ]
+        ]
+    },
+    {
+        "id": "8ae8439da14ed8e2",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseHumidity",
+        "func": "if ((typeof msg.payload['humidity'] != \"undefined\") &&\n    (String(msg.payload['humidity']).match(\"e\") != \"e\"))\n{\n    payload = {}\n    payload = msg.payload['humidity']\n    global.set(\"humdifierValue\",payload)\n    msg.payload = payload\n    return msg\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 2240,
+        "wires": [
+            [
+                "4917918008078176"
+            ]
+        ]
+    },
+    {
+        "id": "6c859d3bc840dad9",
+        "type": "kasa",
+        "z": "78de064504b44f81",
+        "name": "Humidifer Plug",
+        "device": "192.168.68.154",
+        "interval": 60000,
+        "eventInterval": 15000,
+        "payload": "getQuickInfo",
+        "payloadType": "info",
+        "debug": false,
+        "x": 880,
+        "y": 2100,
+        "wires": [
+            [
+                "2cf2496c4d53c564"
+            ]
+        ]
+    },
+    {
+        "id": "f71a4d51a4ab9740",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "getQuickInfo",
+        "payloadType": "str",
+        "x": 130,
+        "y": 2100,
+        "wires": [
+            [
+                "6c859d3bc840dad9"
+            ]
+        ]
+    },
+    {
+        "id": "2cf2496c4d53c564",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseStatus",
+        "func": "payload = msg.payload.sysInfo.relay_state\nglobal.set(\"humdifierStatus\",payload)\nif (payload == 1){\n    payload = \"On\"\n}\nelse{\n    payload = \"Off\"\n}\nmsg.payload = payload\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1190,
+        "y": 2100,
+        "wires": [
+            [
+                "9ff39856f0b6148f",
+                "53a0c44480afbacc"
+            ]
+        ]
+    },
+    {
+        "id": "077c33b733c15d02",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "controlHumidifier",
+        "func": "var hStatus = global.get(\"humdifierStatus\")\npayload = \"\"\nif (hStatus == \"1\"){\n    payload = false\n}\nelse{\n    payload = true\n}\nmsg.payload = payload\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 1980,
+        "wires": [
+            [
+                "6c859d3bc840dad9"
+            ]
+        ]
+    },
+    {
+        "id": "60d404542b144e96",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "checkHumidityTimestamp",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "4",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 2320,
+        "wires": [
+            [
+                "502e34cb6e9b0a78"
+            ]
+        ]
+    },
+    {
+        "id": "502e34cb6e9b0a78",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "checkHumidity",
+        "func": "var hValue = global.get(\"humdifierValue\")\nvar hStatus = global.get(\"humdifierStatus\")\npayload = hValue\nif (payload > 50){\n    if (hStatus == true){\n        payload = false\n        msg.payload = payload\n        return msg\n    }\n\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 2320,
+        "wires": [
+            [
+                "6c859d3bc840dad9"
+            ]
+        ]
+    },
+    {
+        "id": "b34948d1b4e0d738",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "",
+        "func": "msg.payload = true\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 1900,
+        "wires": [
+            [
+                "6c859d3bc840dad9"
+            ]
+        ]
+    },
+    {
+        "id": "ba812e918f85bff9",
+        "type": "comment",
+        "z": "78de064504b44f81",
+        "name": "Fan Module",
+        "info": "",
+        "x": 110,
+        "y": 2420,
+        "wires": []
+    },
+    {
+        "id": "9ff39856f0b6148f",
+        "type": "ui_text",
+        "z": "78de064504b44f81",
+        "group": "c00f649b13961c7f",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Humidifier Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 1450,
+        "y": 2100,
+        "wires": []
+    },
+    {
+        "id": "4917918008078176",
+        "type": "ui_gauge",
+        "z": "78de064504b44f81",
+        "name": "Humidity Gauge",
+        "group": "c00f649b13961c7f",
+        "order": 2,
+        "width": "10",
+        "height": "9",
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "30",
+        "seg2": "50",
+        "className": "",
+        "x": 960,
+        "y": 2240,
+        "wires": []
+    },
+    {
+        "id": "94e7a7830c59f11a",
+        "type": "ui_button",
+        "z": "78de064504b44f81",
+        "name": "",
+        "group": "af4d5e840e0a84c9",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Fan On/Off",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 110,
+        "y": 2500,
+        "wires": [
+            [
+                "e7bbafb3b77168b9"
+            ]
+        ]
+    },
+    {
+        "id": "1e78afee330d4428",
+        "type": "ui_text",
+        "z": "78de064504b44f81",
+        "group": "af4d5e840e0a84c9",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Fan Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 990,
+        "y": 2640,
+        "wires": []
+    },
+    {
+        "id": "47f6628f5d19b63d",
+        "type": "ui_gauge",
+        "z": "78de064504b44f81",
+        "name": "Temperature Gauge",
+        "group": "af4d5e840e0a84c9",
+        "order": 2,
+        "width": "10",
+        "height": "9",
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "45",
+        "colors": [
+            "#00b500",
+            "#ffd700",
+            "#ca3838"
+        ],
+        "seg1": "30",
+        "seg2": "35",
+        "className": "",
+        "x": 880,
+        "y": 2780,
+        "wires": []
+    },
+    {
+        "id": "828f52d14663a712",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseTemperature",
+        "func": "if ((typeof msg.payload['temperature'] != \"undefined\") &&\n    (String(msg.payload['temperature']).match(\"e\") != \"e\"))\n{\n    payload = {}\n    payload = msg.payload['temperature']\n    global.set(\"temperatureValue\",payload)\n    msg.payload = payload\n    return msg\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 2780,
+        "wires": [
+            [
+                "47f6628f5d19b63d"
+            ]
+        ]
+    },
+    {
+        "id": "977caa6583e68666",
+        "type": "kasa",
+        "z": "78de064504b44f81",
+        "name": "Fan Plug",
+        "device": "192.168.68.173",
+        "interval": 60000,
+        "eventInterval": 15000,
+        "payload": "getQuickInfo",
+        "payloadType": "info",
+        "debug": false,
+        "x": 360,
+        "y": 2640,
+        "wires": [
+            [
+                "661aeae9763d4423"
+            ]
+        ]
+    },
+    {
+        "id": "5b1c4724271d4133",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "getQuickInfo",
+        "payloadType": "str",
+        "x": 130,
+        "y": 2640,
+        "wires": [
+            [
+                "977caa6583e68666"
+            ]
+        ]
+    },
+    {
+        "id": "661aeae9763d4423",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseStatus",
+        "func": "payload = msg.payload.sysInfo.relay_state\nglobal.set(\"fanStatus\",payload)\nif (payload == 1){\n    payload = \"On\"\n}\nelse{\n    payload = \"Off\"\n}\nmsg.payload = payload\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 2640,
+        "wires": [
+            [
+                "1e78afee330d4428"
+            ]
+        ]
+    },
+    {
+        "id": "e7bbafb3b77168b9",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "controlHumidifier",
+        "func": "var tStatus = global.get(\"fanStatus\")\npayload = \"\"\nif (tStatus == \"1\"){\n    payload = false\n}\nelse{\n    payload = true\n}\nmsg.payload = payload\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 2500,
+        "wires": [
+            [
+                "977caa6583e68666"
+            ]
+        ]
+    },
+    {
+        "id": "a0870cac314aad8c",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "checkTemperatureTimestamp",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "4",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 2880,
+        "wires": [
+            [
+                "ed18cfd3c686b6c6"
+            ]
+        ]
+    },
+    {
+        "id": "ed18cfd3c686b6c6",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "checkTemperature",
+        "func": "var tValue = global.get(\"temperatureValue\")\nvar tStatus = global.get(\"fanStatus\")\npayload = tValue\nif (payload < 35){\n    if (tStatus == true){\n        payload = false\n        msg.payload = payload\n        return msg\n    }\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 2880,
+        "wires": [
+            [
+                "977caa6583e68666"
+            ]
+        ]
+    },
+    {
+        "id": "17c4a22f643ec2b2",
+        "type": "comment",
+        "z": "78de064504b44f81",
+        "name": "Air Purifier Module",
+        "info": "",
+        "x": 110,
+        "y": 2960,
+        "wires": []
+    },
+    {
+        "id": "812005bf86244a59",
+        "type": "exec",
+        "z": "78de064504b44f81",
+        "command": "python /home/pi/Desktop/tcss573/project/airQualitySensor.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 460,
+        "y": 3120,
+        "wires": [
+            [
+                "a27bcda977d0d390"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a27bcda977d0d390",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseValue",
+        "func": "let str = msg.payload;\nstr = str.substring(0, str.length - 1); \nmsg.payload = parseInt(str);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 3120,
+        "wires": [
+            [
+                "3fd52ae77b70376f"
+            ]
+        ]
+    },
+    {
+        "id": "98e5b9e9332c91b5",
+        "type": "ui_button",
+        "z": "78de064504b44f81",
+        "name": "",
+        "group": "e43741dc9b6ce790",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Air Purifier On/Off",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 110,
+        "y": 3040,
+        "wires": [
+            [
+                "3a105347870fc4d0"
+            ]
+        ]
+    },
+    {
+        "id": "eb8fefb8b7de0ee2",
+        "type": "ui_text",
+        "z": "78de064504b44f81",
+        "group": "e43741dc9b6ce790",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Air Purifier Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 990,
+        "y": 3200,
+        "wires": []
+    },
+    {
+        "id": "3fd52ae77b70376f",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseAirQuality",
+        "func": "payload = {}\npayload = msg.payload\nglobal.set(\"airQualityValue\",payload)\nmsg.payload = payload\nreturn msg\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 3280,
+        "wires": [
+            [
+                "2e7c9401860e75bf"
+            ]
+        ]
+    },
+    {
+        "id": "50e81d7785ad683f",
+        "type": "kasa",
+        "z": "78de064504b44f81",
+        "name": "Purifier Plug",
+        "device": "192.168.68.174",
+        "interval": 60000,
+        "eventInterval": 15000,
+        "payload": "getQuickInfo",
+        "payloadType": "info",
+        "debug": false,
+        "x": 370,
+        "y": 3200,
+        "wires": [
+            [
+                "5731d84d8321c48e"
+            ]
+        ]
+    },
+    {
+        "id": "6904cbbfc7979f2e",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "getQuickInfo",
+        "payloadType": "str",
+        "x": 110,
+        "y": 3200,
+        "wires": [
+            [
+                "50e81d7785ad683f"
+            ]
+        ]
+    },
+    {
+        "id": "5731d84d8321c48e",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseStatus",
+        "func": "payload = msg.payload.sysInfo.relay_state\nglobal.set(\"APStatus\",payload)\nif (payload == 1){\n    payload = \"On\"\n}\nelse{\n    payload = \"Off\"\n}\nmsg.payload = payload\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 3200,
+        "wires": [
+            [
+                "eb8fefb8b7de0ee2"
+            ]
+        ]
+    },
+    {
+        "id": "3a105347870fc4d0",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "controlAirPurifier",
+        "func": "var aStatus = global.get(\"APStatus\")\npayload = \"\"\nif (aStatus == \"1\"){\n    payload = false\n}\nelse{\n    payload = true\n}\nmsg.payload = payload\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 3040,
+        "wires": [
+            [
+                "50e81d7785ad683f"
+            ]
+        ]
+    },
+    {
+        "id": "fd6a944d6ddf5f38",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "checkAirQualityTimestamp",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "4",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 3360,
+        "wires": [
+            [
+                "ec55a7751dea59df"
+            ]
+        ]
+    },
+    {
+        "id": "ec55a7751dea59df",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "checkAirQuality",
+        "func": "var aValue = global.get(\"airQualityValue\")\nvar aStatus = global.get(\"APStatus\")\npayload = aValue\nif (payload < 300){\n    if (aStatus == true){\n        payload = false\n        msg.payload = payload\n        return msg\n    }\n\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 3360,
+        "wires": [
+            [
+                "50e81d7785ad683f"
+            ]
+        ]
+    },
+    {
+        "id": "0c505e6bd8969645",
+        "type": "inject",
+        "z": "78de064504b44f81",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 3120,
+        "wires": [
+            [
+                "812005bf86244a59"
+            ]
+        ]
+    },
+    {
+        "id": "2e7c9401860e75bf",
+        "type": "ui_text",
+        "z": "78de064504b44f81",
+        "group": "e43741dc9b6ce790",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Air Quality",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 910,
+        "y": 3280,
+        "wires": []
+    },
+    {
+        "id": "e4550f55f22324b5",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "prepareToken",
+        "func": "msg.voice = msg.payload;\nmsg.headers = {};\nmsg.headers['Ocp-Apim-Subscription-Key'] = 'c115498f692e4cb7be216782f6547c74';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 3480,
+        "wires": [
+            [
+                "fdc88ca768d57fa9"
+            ]
+        ]
+    },
+    {
+        "id": "fdc88ca768d57fa9",
+        "type": "http request",
+        "z": "78de064504b44f81",
+        "name": "issueToken",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 610,
+        "y": 3480,
+        "wires": [
+            [
+                "0eca4903a8b81941"
+            ]
+        ]
+    },
+    {
+        "id": "0eca4903a8b81941",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "setHeaders",
+        "func": "msg.headers = {};\nmsg.headers['Authorization'] = 'Bearer ' + msg.payload;\nmsg.headers['Transfer-Encoding'] = 'chunked';\nmsg.headers['Content-Type'] = 'audio/wav; codecs=audio/pcm; samplerate=16000';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 3480,
+        "wires": [
+            [
+                "24e40d32ff84e58c"
+            ]
+        ]
+    },
+    {
+        "id": "24e40d32ff84e58c",
+        "type": "change",
+        "z": "78de064504b44f81",
+        "name": "convertSpeechText",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "voice",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1090,
+        "y": 3480,
+        "wires": [
+            [
+                "572bdd6333f86f48"
+            ]
+        ]
+    },
+    {
+        "id": "572bdd6333f86f48",
+        "type": "http request",
+        "z": "78de064504b44f81",
+        "name": "executeRequest",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 140,
+        "y": 3560,
+        "wires": [
+            [
+                "2345c7742f2b2f93"
+            ]
+        ]
+    },
+    {
+        "id": "2345c7742f2b2f93",
+        "type": "json",
+        "z": "78de064504b44f81",
+        "name": "convertJSON",
+        "property": "payload",
+        "action": "",
+        "pretty": true,
+        "x": 350,
+        "y": 3560,
+        "wires": [
+            [
+                "c8ceabd004421bce"
+            ]
+        ]
+    },
+    {
+        "id": "c8ceabd004421bce",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "extractText",
+        "func": "var vmsg = msg.payload // copy payload into vmsg variable\nmsg.vmsg = vmsg; // copy value temporarily in vmsg\nvar extractedText = vmsg['DisplayText'].toString().toLowerCase(); // set to lowercase for string comparison\nmsg.extractedText = extractedText; // return as part of the msg\nextractedText = extractedText.split('?').join('');\nextractedText = extractedText.split(\"'\").join(' ');\nextractedText = extractedText.split(\",\").join(' ');\nextractedText = extractedText.split(\".\").join(' ');\nvar res = extractedText.split(\" \"); // split into an array\n// check to see if the message contains keyword 'lucy'\nvar value = \"\"\nif (res.includes(\"lucy\"))\n{\n// if msg contains 'office' keyword, check for light state\n\tif (res.includes(\"lights\"))\n\t{\n\t// if msg contains 'on' keyword, set flag to true (light ON)\n\tvalue = \"lights\"\n\tif (res.includes(\"on\"))\n\t\t{\n\t\t\tmsg.payload = true;\n\t\t}\n\t// if msg contains 'off' keyword, set flag to false (light OFF)\n\telse if (res.includes(\"off\"))\n\t\t{\n\t\t\tmsg.payload = false;\n\t\t}\n\t}\n\tif (res.includes(\"humidifier\"))\n\t{\n\t// if msg contains 'on' keyword, set flag to true (light ON)\n\tvalue = \"humidifier\"\n\tif (res.includes(\"on\"))\n\t\t{\n\t\t\tmsg.payload = true;\n\t\t}\n\t// if msg contains 'off' keyword, set flag to false (light OFF)\n\telse if (res.includes(\"off\"))\n\t\t{\n\t\t\tmsg.payload = false;\n\t\t}\n\t}\n\tif (res.includes(\"fan\"))\n\t{\n\t// if msg contains 'on' keyword, set flag to true (light ON)\n\tvalue = \"fan\"\n\tif (res.includes(\"on\"))\n\t\t{\n\t\t\tmsg.payload = true;\n\t\t}\n\t// if msg contains 'off' keyword, set flag to false (light OFF)\n\telse if (res.includes(\"off\"))\n\t\t{\n\t\t\tmsg.payload = false;\n\t\t}\n\t}\n\tif (res.includes(\"purifier\"))\n\t{\n\t// if msg contains 'on' keyword, set flag to true (light ON)\n\tvalue = \"purifier\"\n\tif (res.includes(\"on\"))\n\t\t{\n\t\t\tmsg.payload = true;\n\t\t}\n\t// if msg contains 'off' keyword, set flag to false (light OFF)\n\telse if (res.includes(\"off\"))\n\t\t{\n\t\t\tmsg.payload = false;\n\t\t}\n\t}\n\telse if (res.includes(\"temperature\"))\n\t{\n\tvalue = \"temperature\"\n\t}\n\telse if (res.includes(\"humidity\"))\n\t{\n\tvalue = \"humidity\"\n\t}\n\telse if (res.includes(\"quality\"))\n\t{\n\tvalue = \"quality\"\n\t}\n\telse if (res.includes(\"intensity\"))\n\t{\n\t    if (res.includes(\"increase\"))\n\t\t{\n\t\t\tvalue = \"increase\"\n\t\t}\n\t\telse if (res.includes(\"decrease\"))\n\t\t{\n\t\t    \tvalue = \"decrease\"\n\t\t}\n\t\telse{\n\t\t    value = \"intensity\"\n\t\t}\n\t}\n}\nmsg.topic = value\nreturn msg; // functions in Node-RED must always return an object",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 3560,
+        "wires": [
+            [
+                "8b522507766e635e",
+                "ccb39d3dd79fb363"
+            ]
+        ]
+    },
+    {
+        "id": "8b522507766e635e",
+        "type": "switch",
+        "z": "78de064504b44f81",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "lights",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "humidifier",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "fan",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "purifier",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "temperature",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "humidity",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "quality",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "intensity",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "increase",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "decrease",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 10,
+        "x": 670,
+        "y": 3740,
+        "wires": [
+            [
+                "01055ee2294c8829"
+            ],
+            [
+                "392e59d01ffe3be0"
+            ],
+            [
+                "216dabbb79e1b1a1"
+            ],
+            [
+                "90c425b4952a8f13"
+            ],
+            [
+                "f237283749dedc2f"
+            ],
+            [
+                "84e7a2425773ef37"
+            ],
+            [
+                "3637e076f810a3b4"
+            ],
+            [
+                "4e5ca603e3857c8f"
+            ],
+            [
+                "2eeb638dab9765c1"
+            ],
+            [
+                "1478a3c3d3a06310"
+            ]
+        ]
+    },
+    {
+        "id": "392e59d01ffe3be0",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "processPayloadForHumidifier",
+        "func": "value = {}\nif (msg.topic == \"humidifier\"){\n    value.payload = msg.payload\n}\nmsg = value\nif (msg.payload == true){\n    msg.text = \"Humidifier on\"\n}\nelse{\n    msg.text = \"Humidifier off\"\n}\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 3660,
+        "wires": [
+            [
+                "6c859d3bc840dad9",
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "90c425b4952a8f13",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "processPayloadForPurifier",
+        "func": "value = {}\nif (msg.topic == \"purifier\"){\n    value.payload = msg.payload\n}\nmsg = value\nif (msg.payload == true){\n    msg.text = \"Purifier on\"\n}\nelse{\n    msg.text = \"Purifier off\"\n}\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 3760,
+        "wires": [
+            [
+                "50e81d7785ad683f",
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "216dabbb79e1b1a1",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "processPayloadForFan",
+        "func": "value = {}\nif (msg.topic == \"fan\"){\n    value.payload = msg.payload\n}\nmsg = value\nif (msg.payload == true){\n    msg.text = \"Fan on\"\n}\nelse{\n    msg.text = \"Fan off\"\n}\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 3700,
+        "wires": [
+            [
+                "977caa6583e68666",
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "5f1b372b4f8413a6",
+        "type": "comment",
+        "z": "78de064504b44f81",
+        "name": "Speech To Text",
+        "info": "",
+        "x": 100,
+        "y": 3420,
+        "wires": []
+    },
+    {
+        "id": "f237283749dedc2f",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "addTemperatureTextForTTS",
+        "func": "var txt2 = global.get(\"temperatureValue\")\nvar value = \"Right now it is \"\nvalue = value.concat(' ', txt2);\nvalue = value.concat(' ','degree celcius');\nmsg.text = value\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 3820,
+        "wires": [
+            [
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "84e7a2425773ef37",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "addHumidityTextForTTS",
+        "func": "var txt2 = global.get(\"humdifierValue\")\nvar value = \"Right now the humidity is \"\nvalue = value.concat(' ', txt2);\nvalue = value.concat(' ','percent');\nmsg.text = value\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 3880,
+        "wires": [
+            [
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "3637e076f810a3b4",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "addLightTextForTTS",
+        "func": "var txt2 = global.get(\"airQualityValue\")\nvar value = \"\"\nif (txt2 > 700)\n{\n    value = \"High Pollution\"\n}\nif (txt2 > 300)\n{\n    value = \"Low Pollution\"\n}\nelse{\n    value = \"The air is fresh\"\n}\nmsg.text = value\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 3940,
+        "wires": [
+            [
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "5801e63f39dda31b",
+        "type": "ui_microphone",
+        "z": "78de064504b44f81",
+        "name": "Lucy",
+        "group": "08ee6953c21be561",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "maxLength": 5,
+        "maxRecogLength": 5,
+        "timeslice": 0,
+        "press": "click",
+        "mode": "audio",
+        "interimResults": false,
+        "x": 70,
+        "y": 3480,
+        "wires": [
+            [
+                "e4550f55f22324b5"
+            ]
+        ]
+    },
+    {
+        "id": "6488bedf4750390e",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "humidiferStatus",
+        "func": "msg.payload = \"On\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1480,
+        "y": 3960,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "10d5d77eb17fd38b",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "kasaBrightness",
+        "func": "msg.payload = \"50%\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1480,
+        "y": 4080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "457b3f5fbc3bb2d6",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "KasaBrightness",
+        "func": "msg.payload = \"100%\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1480,
+        "y": 4120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "72fdd1d7a3cd49ff",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "humidifierStatus",
+        "func": "msg.payload = \"Off\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1480,
+        "y": 4020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "52413fbbcbae9c31",
+        "type": "file in",
+        "z": "78de064504b44f81",
+        "name": "",
+        "filename": "/home/pi/Desktop/tcss573/project/Sound/test2.wav",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1110,
+        "y": 4280,
+        "wires": [
+            [
+                "e4550f55f22324b5"
+            ]
+        ]
+    },
+    {
+        "id": "256d26fd82e4e2e7",
+        "type": "exec",
+        "z": "78de064504b44f81",
+        "command": "sudo python3 /home/pi/Desktop/tcss573/project/Sound/mic.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 890,
+        "y": 4180,
+        "wires": [
+            [
+                "52413fbbcbae9c31",
+                "1b447a347d3b6ecd"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "61ef562d23df97ce",
+        "type": "grove digital sensor",
+        "z": "78de064504b44f81",
+        "name": "PressToInteract",
+        "board": "87b737a3b21ecf5c",
+        "sensor": "button",
+        "repeat": "1",
+        "pin": "3",
+        "x": 140,
+        "y": 4180,
+        "wires": [
+            [
+                "0dd80c52a6b78328"
+            ]
+        ]
+    },
+    {
+        "id": "0dd80c52a6b78328",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "parseButton",
+        "func": "var user = global.get(\"userIdentified\")\nvar recording = global.get(\"recording\")\nif (recording == false)\n{\nif (msg.payload==1 && user == true){\n        global.set(\"recording\",true)\n        msg.topic = \"exec\"\n        return msg\n    }\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 4180,
+        "wires": [
+            [
+                "256d26fd82e4e2e7"
+            ]
+        ]
+    },
+    {
+        "id": "01055ee2294c8829",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "processPayloadForKasaDimmer",
+        "func": "value = {}\nif (msg.topic == \"lights\"){\n    value.payload = msg.payload\n}\nmsg = value\nif (msg.payload == true){\n    msg.text = \"Lights on\"\n}\nelse{\n    msg.text = \"Lights off\"\n}\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 3620,
+        "wires": [
+            [
+                "7fd7224850860ae6",
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "b5c044f0dfcabb5c",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "prepareTokenTTS",
+        "func": "msg.headers = {};\nmsg.headers['Ocp-Apim-Subscription-Key'] = 'c115498f692e4cb7be216782f6547c74';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 4480,
+        "wires": [
+            [
+                "29660e15dc1b601a"
+            ]
+        ]
+    },
+    {
+        "id": "29660e15dc1b601a",
+        "type": "http request",
+        "z": "78de064504b44f81",
+        "name": "issueTokenTTS",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 380,
+        "y": 4560,
+        "wires": [
+            [
+                "2418eaf5666adff4"
+            ]
+        ]
+    },
+    {
+        "id": "2418eaf5666adff4",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "setHeadersTTS",
+        "func": "msg.headers = {};\nmsg.headers['Authorization'] = 'Bearer ' + msg.payload;\nmsg.headers['cache-control'] = 'no-cache';\nmsg.headers['User-Agent']= 'assign4-demo';\nmsg.headers['X-Microsoft-OutputFormat'] = 'riff-24khz-16bit-mono-pcm';\nmsg.headers['Content-Type'] = 'application/ssml+xml';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 4660,
+        "wires": [
+            [
+                "12985abeec1ae797"
+            ]
+        ]
+    },
+    {
+        "id": "12985abeec1ae797",
+        "type": "change",
+        "z": "78de064504b44f81",
+        "name": "convertText",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "text",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 4760,
+        "wires": [
+            [
+                "de5b33dda0f049d6"
+            ]
+        ]
+    },
+    {
+        "id": "de5b33dda0f049d6",
+        "type": "template",
+        "z": "78de064504b44f81",
+        "name": "setTemplateTTS",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"en-US\">\n    <voice name=\"en-US-JennyNeural\">\n        {{payload}}\n    </voice>\n</speak>",
+        "output": "str",
+        "x": 400,
+        "y": 4820,
+        "wires": [
+            [
+                "6adee981546933cf"
+            ]
+        ]
+    },
+    {
+        "id": "6adee981546933cf",
+        "type": "http request",
+        "z": "78de064504b44f81",
+        "name": "executeRequestTTS",
+        "method": "POST",
+        "ret": "bin",
+        "paytoqs": "ignore",
+        "url": "https://westus.tts.speech.microsoft.com/cognitiveservices/v1",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 420,
+        "y": 4900,
+        "wires": [
+            [
+                "f7c4c03d5250ea80"
+            ]
+        ]
+    },
+    {
+        "id": "f7c4c03d5250ea80",
+        "type": "play audio",
+        "z": "78de064504b44f81",
+        "name": "Voice",
+        "voice": "2",
+        "x": 350,
+        "y": 4980,
+        "wires": []
+    },
+    {
+        "id": "19305ad40c835222",
+        "type": "comment",
+        "z": "78de064504b44f81",
+        "name": "Text to Speech",
+        "info": "",
+        "x": 140,
+        "y": 4300,
+        "wires": []
+    },
+    {
+        "id": "ccb39d3dd79fb363",
+        "type": "debug",
+        "z": "78de064504b44f81",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 3560,
+        "wires": []
+    },
+    {
+        "id": "4e5ca603e3857c8f",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "addIntensityTextForTTS",
+        "func": "var txt2 = global.get(\"lightIntensityValue\")\nvar value = \"The current light intensity is \"\nvalue = value.concat(' ', txt2);\nmsg.text = value\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 4000,
+        "wires": [
+            [
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "2eeb638dab9765c1",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "increaseIntensityTTS",
+        "func": "var txt2 = global.get(\"optimalLightIntensityValue\")\nvar value = \"The optimal light intensity has been set to \"\nvalue = value.concat(' ', txt2 + 100);\nmsg.text = value\nmsg.payload = txt2 + 100\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 4060,
+        "wires": [
+            [
+                "3fa6e5c85613821b",
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "1478a3c3d3a06310",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "decreaseIntensityTTS",
+        "func": "var txt2 = global.get(\"optimalLightIntensityValue\")\nvar value = \"The optimal light intensity has been set to \"\nvalue = value.concat(' ', txt2 - 100);\nmsg.text = value\nmsg.payload = txt2 - 100\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 4100,
+        "wires": [
+            [
+                "3fa6e5c85613821b",
+                "b5c044f0dfcabb5c"
+            ]
+        ]
+    },
+    {
+        "id": "1b40a866b5e99c4e",
+        "type": "debug",
+        "z": "78de064504b44f81",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "1b447a347d3b6ecd",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "recordingProcessComplete",
+        "func": "global.set(\"recording\",false)",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1460,
+        "y": 4200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "67da75315140ee4f",
+        "type": "ui_text",
+        "z": "78de064504b44f81",
+        "group": "bcd28d852f40a163",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "Kasa Brightness",
+        "label": "Brigthness",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 1000,
+        "y": 1700,
+        "wires": []
+    },
+    {
+        "id": "274cb0956844da77",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "toggleMotionDetected",
+        "func": "var dst = global.get(\"distance\")\nif (dst < 20){\nglobal.set(\"motionDetected\",\"Yes\");\nreturn msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 620,
+        "wires": [
+            [
+                "ee56b904f30ff21a"
+            ]
+        ]
+    },
+    {
+        "id": "ee56b904f30ff21a",
+        "type": "delay",
+        "z": "78de064504b44f81",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 560,
+        "y": 620,
+        "wires": [
+            [
+                "de6785be175e0c25"
+            ]
+        ]
+    },
+    {
+        "id": "de6785be175e0c25",
+        "type": "function",
+        "z": "78de064504b44f81",
+        "name": "toggleMotionDetected",
+        "func": "global.set(\"motionDetected\",\"No\")\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "53a0c44480afbacc",
+        "type": "debug",
+        "z": "78de064504b44f81",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1330,
+        "y": 2200,
+        "wires": []
+    },
+    {
+        "id": "87b737a3b21ecf5c",
+        "type": "board-config",
+        "board": "GrovePi"
+    },
+    {
+        "id": "bcd28d852f40a163",
+        "type": "ui_group",
+        "name": "Lights",
+        "tab": "42235463bf98a0f4",
+        "order": 5,
+        "disp": true,
+        "width": "10",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c00f649b13961c7f",
+        "type": "ui_group",
+        "name": "Humidity",
+        "tab": "42235463bf98a0f4",
+        "order": 2,
+        "disp": true,
+        "width": "10",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "af4d5e840e0a84c9",
+        "type": "ui_group",
+        "name": "Temperature",
+        "tab": "42235463bf98a0f4",
+        "order": 3,
+        "disp": true,
+        "width": "10",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e43741dc9b6ce790",
+        "type": "ui_group",
+        "name": "Air Quality",
+        "tab": "42235463bf98a0f4",
+        "order": 4,
+        "disp": true,
+        "width": "10",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "08ee6953c21be561",
+        "type": "ui_group",
+        "name": "Voice Assistant",
+        "tab": "42235463bf98a0f4",
+        "order": 1,
+        "disp": true,
+        "width": "10",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "42235463bf98a0f4",
+        "type": "ui_tab",
+        "name": "SMROOM",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
