@@ -49,5 +49,5 @@ If keys are missing in nodes, please replace with the following keys:
 	ii) Prediction- Key: bc6a57279acb40b6ae6635f23b2999bf
 	
 2) Azure Speech Service:
-	i)Ocp-Apim-Subscription-Key = c115498f692e4cb7be216782f6547c74
+	i)Ocp-Apim-Subscription-Key = []
 	ii) URL: https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken
