@@ -64,7 +64,7 @@
         "type": "function",
         "z": "78de064504b44f81",
         "name": "parseImageData",
-        "func": "msg.data = msg.payload;\nmsg.headers = {};\nmsg.headers['Prediction-Key'] = 'bc6a57279acb40b6ae6635f23b2999bf';\nmsg.headers['Content-Type'] =  'application/octet-stream';\nreturn msg;",
+        "func": "msg.data = msg.payload;\nmsg.headers = {};\nmsg.headers['Prediction-Key'] = '';\nmsg.headers['Content-Type'] =  'application/octet-stream';\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
