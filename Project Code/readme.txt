@@ -46,7 +46,7 @@ Note
 If keys are missing in nodes, please replace with the following keys:
 1)Azure Custom Vision Model
 	i)Prediction URL: https://assignment1-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/fb2797fa-9c4a-4545-a20b-5ddfc2abaebe/classify/iterations/Iteration2/image
-	ii) Prediction- Key: bc6a57279acb40b6ae6635f23b2999bf
+	ii) Prediction- Key: []
 	
 2) Azure Speech Service:
 	i)Ocp-Apim-Subscription-Key = []
